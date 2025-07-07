@@ -2,28 +2,20 @@ from pymongo.mongo_client import MongoClient
 import pandas as pd
 import json
 
-# MongoDB Atlas URI
-uri = "mongodb+srv://Sourav:Sourav0987@cluster0.wwq8ftz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+#url
+uri="mongodb+srv://imran:TdPLW9Ad0OzpSSD2@cluster0.fv0lm61.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
-# Create MongoDB client using Atlas URI
+#create a new client and connectt to server
 client = MongoClient(uri)
 
-# Define DB and Collection
-DATABASE_NAME = "sensors"
-COLLECTION_NAME = "waferfaults"
-collection = client[DATABASE_NAME][COLLECTION_NAME]
+#create database name and collection name
+DATABASE_NAME="pwskills"
+COLLECTION_NAME='waferfault'
 
-# Read and clean CSV
-df = pd.read_csv("wafer_23012020_041211.csv")
-df = df.drop(columns=["Unnamed: 0"], errors='ignore')
+df=pd.read_csv("C:\Users\imran\Dropbox\PC\Downloads\sensorproject\notebooks\wafer_23012020_041211.csv")
 
+df=df.drop("Unnamed: 0",axis=1)
 
-json_str = df.to_json(orient="records")    
-json_record = json.loads(json_str)         
+json_record=list(json.loads(df.T.to_json()).values())
 
-# Optional: print type check
-print(type(json_record))
-
-# Insert into MongoDB
-collection.insert_many(json_record)
-
+client[DATABASE_NAME][COLLECTION_NAME].insert_many(json_record)
